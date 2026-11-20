@@ -1,0 +1,18 @@
+const $=s=>document.querySelector(s);
+const wa="https://wa.me/"+CONFIG.whatsapp+"?text="+encodeURIComponent(CONFIG.mensagem);
+document.querySelectorAll("[data-wa]").forEach(a=>{a.href=wa;a.target="_blank";a.rel="noopener"});
+if($("#maplink"))$("#maplink").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(CONFIG.endereco);
+if($("#hours"))$("#hours").textContent=CONFIG.horarios||"Consulte pelo WhatsApp";
+if($("#yr"))$("#yr").textContent=new Date().getFullYear();
+if(CONFIG.fachada&&$("#fachada"))$("#fachada").innerHTML='<img src="'+CONFIG.fachada+'" alt="Fachada da Barbearia Riviera" decoding="async">';
+if(CONFIG.instagram)$("#social").innerHTML='<a href="'+CONFIG.instagram+'" target="_blank" rel="noopener">Instagram</a>';
+const ico='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg>';
+const slot=(img,alt)=>img?'<div class="slot"><img src="'+img+'" alt="'+alt+'" loading="lazy" decoding="async"></div>':'<div class="slot" role="img" aria-label="'+alt+'">'+ico+'</div>';
+if($("#cards"))$("#cards").innerHTML=CONFIG.servicos.map(s=>'<article class="card rv">'+slot(s.img,s.t)+'<div class="t"><h3>'+s.t+'</h3><p>'+s.d+'</p><span class="price">'+(s.preco||"R$ --,--")+'</span></div></article>').join("");
+if($("#gal"))$("#gal").innerHTML=CONFIG.galeria.map((g,i)=>g?'<div class="slot"><img src="'+g+'" alt="Foto '+(i+1)+' da Barbearia Riviera" loading="lazy" decoding="async"></div>':'<div class="slot" role="img" aria-label="Espaço para foto '+(i+1)+'">'+ico+'</div>').join("");
+const hd=$("#top"),bg=document.querySelector(".burger"),nv=$("#menu");
+addEventListener("scroll",()=>hd.classList.toggle("solid",scrollY>40),{passive:true});
+bg.onclick=()=>{const o=nv.classList.toggle("open");bg.setAttribute("aria-expanded",o);bg.setAttribute("aria-label",o?"Fechar menu":"Abrir menu")};
+nv.querySelectorAll("a").forEach(a=>a.onclick=()=>{nv.classList.remove("open");bg.setAttribute("aria-expanded",false)});
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("on");io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
